@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kontak — Portofolio</title>
+
+  <style>
+    :root{
+      --bg:#f7f7f9;
+      --card:#ffffff;
+      --accent:#0b6cf0;
+      --text:#222;
+      --muted:#666;
+      --radius:12px;
+      --gap:16px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(180deg,var(--bg),#eef2f7 60%);
+      color:var(--text);
+      padding:32px;
+    }
+
+    .container{
+      width:100%;
+      max-width:900px;
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:0 8px 30px rgba(12,20,40,0.06);
+      padding:28px;
+    }
+
+    h1{ margin:0 0 8px 0; font-size:1.6rem; }
+    p.lead{ margin:0 0 20px 0; color:var(--muted); }
+
+    form {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:var(--gap);
+    }
+
+    /* full-width row */
+    .full { grid-column: 1 / -1; }
+
+    label {
+      display:block;
+      font-size:0.9rem;
+      margin-bottom:6px;
+      color:var(--muted);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    textarea,
+    select {
+      width:100%;
+      padding:10px 12px;
+      border:1px solid #e6e8ec;
+      border-radius:8px;
+      font-size:0.95rem;
+      background:#fff;
+      box-sizing:border-box;
+    }
+
+    textarea { min-height:140px; resize:vertical; }
+
+    .form-row {
+      display:flex; flex-direction:column;
+    }
+
+    .actions {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-top:6px;
+    }
+
+    button[type="submit"]{
+      background:var(--accent);
+      color:#fff;
+      border:0;
+      padding:10px 16px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+    }
+    button[type="submit"]:disabled{
+      opacity:0.6; cursor:not-allowed;
+    }
+
+    .hint { font-size:0.85rem; color:var(--muted); }
+
+    .status {
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:8px;
+      display:none;
+    }
+    .status.success { background: #e6fbf1; color: #046a3b; display:block; }
+    .status.error { background: #fff0f0; color:#8b1e1e; display:block; }
+
+    /* responsive */
+    @media (max-width:720px){
+      form { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <h1>Hubungi Saya</h1>
+    <p class="lead">Punya pertanyaan, project, atau kerja sama? Isi formulir di bawah — saya akan balas secepatnya.</p>
+
+    <form id="contactForm" action="#" method="POST" novalidate aria-describedby="formNote">
+      <!-- Nama -->
+      <div class="form-row">
+        <label for="name">Nama lengkap <span aria-hidden="true">⭐</span></label>
+        <input id="name" name="name" type="text" required placeholder="Contoh: Budi Santoso" autocomplete="name" />
+      </div>
+
+      <!-- Email -->
+      <div class="form-row">
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required placeholder="nama@domain.com" autocomplete="email" />
+      </div>
+
+      <!-- Telepon -->
+      <div class="form-row">
+        <label for="phone">Telepon (opsional)</label>
+        <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+62 812-3456-7890" />
+      </div>
+
+      <!-- Subject -->
+      <div class="form-row">
+        <label for="subject">Subjek</label>
+        <input id="subject" name="subject" type="text" required placeholder="Judul singkat pesan" />
+      </div>
+
+      <!-- Message (full width) -->
+      <div class="form-row full">
+        <label for="message">Pesan</label>
+        <textarea id="message" name="message" required placeholder="Tulis pesanmu di sini..."></textarea>
+      </div>
+
+      <!-- Privacy / agreement -->
+      <div class="form-row full" style="display:flex;align-items:center;gap:12px;">
+        <input id="agree" name="agree" type="checkbox" required />
+        <label for="agree" style="margin:0;">Saya setuju untuk diproses datanya sesuai <a href="#" target="_blank" rel="noopener">kebijakan privasi</a>.</label>
+      </div>
+
+      <!-- Hidden honeypot for spam (bot) -->
+      <div style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">
+        <label for="hp">Jika siap, kosongkan field ini</label>
+        <input id="hp" name="hp" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <!-- Actions (full width) -->
+      <div class="form-row full">
+        <div class="actions">
+          <button type="submit" id="submitBtn">Kirim Pesan</button>
+          <div class="hint" id="formNote">Biasanya dibalas dalam 1–2 hari kerja.</div>
+        </div>
+
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Validasi sederhana + simulasi kirim (client-side)
+    (function(){
+      const form = document.getElementById('contactForm');
+      const statusEl = document.getElementById('status');
+      const submitBtn = document.getElementById('submitBtn');
+
+      function showStatus(type, msg){
+        statusEl.className = 'status ' + (type === 'ok' ? 'success' : 'error');
+        statusEl.textContent = msg;
+      }
+
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        statusEl.style.display = 'none';
+
+        // Honeypot check
+        if (form.hp && form.hp.value.trim() !== '') {
+          // suspected bot
+          showStatus('err','Terdeteksi spam. Pengiriman dibatalkan.');
+          return;
+        }
+
+        // Basic validity
+        if (!form.checkValidity()) {
+          showStatus('err','Mohon isi semua field yang wajib dengan format benar.');
+          // trigger native validation tooltips where supported
+          form.reportValidity && form.reportValidity();
+          return;
+        }
+
+        // Disable button to prevent double submit
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Mengirim...';
+
+        // Simulasi AJAX / kirim ke server
+        setTimeout(function(){
+          // Simulasi sukses (di produksi, ganti dengan fetch/axios ke endpoint backend)
+          showStatus('ok','Pesan berhasil dikirim. Terima kasih — saya akan menghubungi Anda segera.');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Kirim Pesan';
+          form.reset();
+        }, 900);
+      });
+    })();
+  </script>
+</body>
+</html>
