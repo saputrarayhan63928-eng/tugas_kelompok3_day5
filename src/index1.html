@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <main class="login-card" role="main" aria-labelledby="loginTitle">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">L</div>
+      <div>
+        <h1 id="loginTitle">Masuk ke Akun</h1>
+        <p>Halaman demo — tidak terhubung ke server</p>
+      </div>
+    </div>
+
+    <!--
+      Form ini hanya dummy: action="#" sehingga tidak mengirim data ke server.
+      Jika ingin mencegah perubahan URL sepenuhnya tanpa JS, bisa tetap dipakai seperti ini.
+    -->
+    <form action="#" method="post" autocomplete="off" novalidate>
+      <div>
+        <label for="email">Email</label>
+        <div class="input">
+          <!-- simple inline SVG icon (kosong tanpa external resource) -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 7.5v9A2.5 2.5 0 0 0 5.5 19h13A2.5 2.5 0 0 0 21 16.5v-9A2.5 2.5 0 0 0 18.5 5h-13A2.5 2.5 0 0 0 3 7.5z" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21 7.5l-9 6-9-6" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input id="email" name="email" type="email" placeholder="contoh@domain.com" required>
+        </div>
+      </div>
+
+      <div>
+        <label for="password">Kata Sandi</label>
+        <div class="input">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="10" rx="2" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+            <path d="M7 11V8a5 5 0 0 1 10 0v3" stroke="rgba(255,255,255,0.5)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input id="password" name="password" type="password" placeholder="Masukkan kata sandi" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <label class="checkbox">
+          <input type="checkbox" name="remember" aria-label="Ingat saya">
+          Ingat saya
+        </label>
+        <a href="#" class="mini" style="color:var(--muted); text-decoration:none;">Lupa kata sandi?</a>
+      </div>
+
+      <div>
+        <button type="submit" class="btn">Masuk</button>
+      </div>
+    </form>
+
+    <p class="help">Belum punya akun? <span class="mini" style="color:#cfe0ff">Buat akun baru (demo)</span></p>
+  </main>
+</body>
+</html>
